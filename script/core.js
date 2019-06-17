@@ -1,5 +1,14 @@
+//Globais
+
 perguntas = [];
 
+cadastrados = getObjectLocalStorage("cadastrados");
+if (cadastrados == null) {
+    cadastrados = [];
+    setObjectLocalStorage("cadastrados", cadastrados);
+} 
+
+//Funções Principais
 
 function login() {
     var email = document.getElementById("email").value;
@@ -21,19 +30,22 @@ function login() {
         }
     }
     window.alert("E-mail não cadastrado");
+    return false;
 }
 
 function cadastro() {
     if (typeof (Storage) !== "undefined") {
-        var email = document.getElementById("e-mail").value;
+        var nome = document.getElementById("nome").value;
+        var email = document.getElementById("email").value;
         var senha = document.getElementById("senha").value;
+        var nascimento = document.getElementById("nascimento").value;
+        var radio = document.getElementsByName("genero");
+        var genero = getChecked(radio);
 
-        var usuario = new Usuario(email, senha);
+        var usuario = new Usuario(nome, undefined, nascimento, genero, undefined, undefined, email, senha);
         cadastrados = getObjectLocalStorage("cadastrados");
         cadastrados.push(usuario);
-
         setObjectLocalStorage("cadastrados", cadastrados);
-
     } else {
         window.alert("API Web Storage não encontrada");
     }
@@ -49,7 +61,7 @@ function Pergunta(id, pergunta){
     this.pergunta = pergunta;
 }
 
-function Usuario(nome, foto, nascimento, genero, idadeP, generoP, email, senha, tipo){
+function Usuario(nome, foto, nascimento, genero, idadeP, generoP, email, senha){
     this.foto = foto;
     this.nome = nome;
     this.nascimento = nascimento;
@@ -61,13 +73,21 @@ function Usuario(nome, foto, nascimento, genero, idadeP, generoP, email, senha, 
     this.email = email;
     this.senha = senha;
 
-    this.tipo = tipo;
     this.descricao = function(){
         return "O usuário é: "+this.nome+"!";
     }
 }
 
-//Funções de escrita e leitura
+//Funções Auxiliares
+
+function getChecked(lista){
+    for (var i=0; i < lista.length; i++){
+        if (lista[i].checked){
+            return lista[i].value;
+        }
+    }
+    return null;
+}
 
 function setObjectLocalStorage(key,value){
 	localStorage.setItem(key, JSON.stringify(value));
