@@ -20,7 +20,9 @@ function login() {
         usuario = cadastrados[i];
         if (usuario.email == email){
             if (usuario.senha == senha){
-                setObjectLocalStorage("logado", usuario)
+                setObjectLocalStorage("logado", usuario);
+                window.alert("Bem vindo"+usuario.nome+"!");
+                window.location.href = "index.html";
                 return true;
             }
             else {
@@ -46,13 +48,18 @@ function cadastro() {
         cadastrados = getObjectLocalStorage("cadastrados");
         cadastrados.push(usuario);
         setObjectLocalStorage("cadastrados", cadastrados);
+        setObjectLocalStorage("logado", usuario);
+        window.alert("Bem vindo"+usuario.nome+"!");
+        window.location.href = "index.html";
     } else {
         window.alert("API Web Storage não encontrada");
     }
 }
 
-
-
+function logout(){
+    localStorage.removeItem("logado");
+    window.location.href = "login.html"
+}
 
 //Classes
 
