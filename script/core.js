@@ -21,7 +21,7 @@ function login() {
         if (usuario.email == email){
             if (usuario.senha == senha){
                 setObjectLocalStorage("logado", usuario);
-                window.alert("Bem vindo"+usuario.nome+"!");
+                window.alert("Bem vindo "+usuario.nome+"!");
                 window.location.href = "index.html";
                 return true;
             }
@@ -58,7 +58,42 @@ function cadastro() {
 
 function logout(){
     localStorage.removeItem("logado");
-    window.location.href = "login.html"
+    window.location.href = "login.html";
+}
+
+
+function update(){
+    return true;
+}
+
+function remove(){
+    var cadastrados = getObjectLocalStorage("cadastrados");
+    var usuario = getObjectLocalStorage("logado");
+    var sure = confirm("Você está prestes a excluir essa conta.\nDeseja continuar?");
+    if (sure){
+        for (var i = 0; i < cadastrados.length; i++){
+            var user = cadastrados[i];
+            if (isEquivalent(user, usuario)){
+                cadastrados.splice(i, 1);
+                setObjectLocalStorage("cadastrados", cadastrados);
+                localStorage.removeItem("logado");
+                window.location.href = "login.html";
+                return true;
+            }
+        }
+        window.alert("Usuário logado não consta como cadastrado!!!")
+        return false;
+    }
+}
+
+function valida(){
+    if (getObjectLocalStorage("logado") == null){
+        window.location.href = "login.html";
+    }
+}
+
+function redireciona(){
+    window.location.href = "cadastro.html";
 }
 
 //Classes
@@ -86,6 +121,32 @@ function Usuario(nome, foto, nascimento, genero, idadeP, generoP, email, senha){
 }
 
 //Funções Auxiliares
+
+function isEquivalent(a, b) {
+    // Create arrays of property names
+    var aProps = Object.getOwnPropertyNames(a);
+    var bProps = Object.getOwnPropertyNames(b);
+
+    // If number of properties is different,
+    // objects are not equivalent
+    if (aProps.length != bProps.length) {
+        return false;
+    }
+
+    for (var i = 0; i < aProps.length; i++) {
+        var propName = aProps[i];
+
+        // If values of same property are not equal,
+        // objects are not equivalent
+        if (a[propName] !== b[propName]) {
+            return false;
+        }
+    }
+
+    // If we made it this far, objects
+    // are considered equivalent
+    return true;
+}
 
 function getChecked(lista){
     for (var i=0; i < lista.length; i++){
