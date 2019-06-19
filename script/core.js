@@ -41,6 +41,7 @@ function cadastro() {
         var email = document.getElementById("email").value;
         var senha = document.getElementById("senha").value;
         var nascimento = document.getElementById("nascimento").value;
+        console.log(nascimento);
         var radio = document.getElementsByName("genero");
         var genero = getChecked(radio);
 
@@ -61,9 +62,20 @@ function logout(){
     window.location.href = "login.html";
 }
 
+function preenche(){
+    var usuario = getObjectLocalStorage("logado");
+    document.getElementById("nome").value = usuario.nome;
+    document.getElementById("email").value = usuario.email;
+    document.getElementById("nascimento").value = usuario.nascimento;
+}
 
 function update(){
-    var minhaDiv = document.getElementById("dados");
+    var usuario = getObjectLocalStorage("logado");
+    var senha = document.getElementById("oldsenha").value; 
+    if (senha == usuario.senha){
+        usuario.senha = document.getElementById("newsenha").value;
+    }
+
 }
 
 function remove(){
@@ -112,6 +124,8 @@ function Usuario(nome, foto, nascimento, genero, idadeP, generoP, email, senha){
     this.email = email;
     this.senha = senha;
 
+    this.match = [];
+
     this.descricao = function(){
         return "O usuário é: "+this.nome+"!";
     }
@@ -119,19 +133,20 @@ function Usuario(nome, foto, nascimento, genero, idadeP, generoP, email, senha){
 
 //Funções Auxiliares
 
-function calculaIdade(nasc){
+function calculaIdade(nascimento){
     var data = new Date();
+    var nasc = new Date(nascimento);
     var dia = data.getDate();
     var diaN = nasc.getDate();
     var mes = data.getMonth();
     var mesN = nasc.getMonth();
     var ano = data.getFullYear();
     var anoN = nasc.getFullYear();
-    if (ano > anoN){
-        if (mes > mesn){
+    if (ano >= anoN){
+        if (mes > mesN){
             return ano-anoN;
         }
-        else if (mes < mesn){
+        else if (mes < mesN){
             return ano-anoN-1;
         }
         else{
