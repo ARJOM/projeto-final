@@ -44,13 +44,13 @@ function cadastro() {
         var radio = document.getElementsByName("genero");
         var genero = getChecked(radio);
 
-        var usuario = new Usuario(nome, undefined, nascimento, genero, undefined, undefined, email, senha);
+        var usuario = new Usuario(nome, null, nascimento, genero, null, null, email, senha);
         cadastrados = getObjectLocalStorage("cadastrados");
         cadastrados.push(usuario);
         setObjectLocalStorage("cadastrados", cadastrados);
         setObjectLocalStorage("logado", usuario);
-        window.alert("Bem vindo"+usuario.nome+"!");
-        window.location.href = "index.html";
+        window.alert("Bem vindo "+usuario.nome+"!");
+        window.location.href = "update.html";
     } else {
         window.alert("API Web Storage não encontrada");
     }
@@ -63,7 +63,7 @@ function logout(){
 
 
 function update(){
-    return true;
+    var minhaDiv = document.getElementById("dados");
 }
 
 function remove(){
@@ -92,10 +92,6 @@ function valida(){
     }
 }
 
-function redireciona(){
-    window.location.href = "cadastro.html";
-}
-
 //Classes
 
 function Pergunta(id, pergunta){
@@ -108,6 +104,7 @@ function Usuario(nome, foto, nascimento, genero, idadeP, generoP, email, senha){
     this.nome = nome;
     this.nascimento = nascimento;
     this.genero = genero;
+    this.idade = calculaIdade(nascimento);
 
     this.idadeP = idadeP;
     this.generoP = generoP;
@@ -121,6 +118,36 @@ function Usuario(nome, foto, nascimento, genero, idadeP, generoP, email, senha){
 }
 
 //Funções Auxiliares
+
+function calculaIdade(nasc){
+    var data = new Date();
+    var dia = data.getDate();
+    var diaN = nasc.getDate();
+    var mes = data.getMonth();
+    var mesN = nasc.getMonth();
+    var ano = data.getFullYear();
+    var anoN = nasc.getFullYear();
+    if (ano > anoN){
+        if (mes > mesn){
+            return ano-anoN;
+        }
+        else if (mes < mesn){
+            return ano-anoN-1;
+        }
+        else{
+            if (dia >= diaN){
+                return ano-anoN;
+            }
+            else {
+                return ano-anoN-1;
+            }
+        }
+    }
+    else {
+        return null;
+    }
+}
+
 
 function isEquivalent(a, b) {
     // Create arrays of property names
