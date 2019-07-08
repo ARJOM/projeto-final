@@ -21,7 +21,12 @@ function login() {
         if (usuario.email == email){
             if (usuario.senha == senha){
                 setObjectLocalStorage("logado", usuario);
-                window.alert("Bem vindo "+usuario.nome+"!");
+                if (usuario.genero == "f"){
+                    window.alert("Bem vinda "+usuario.nome+"!");
+                }
+                else {
+                    window.alert("Bem vindo "+usuario.nome+"!");
+                }
                 window.location.href = "index.html";
                 return true;
             }
