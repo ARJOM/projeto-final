@@ -1,7 +1,4 @@
-function Pergunta(id, pergunta){
-    this.id = id;
-    this.pergunta = pergunta;
-}
+//Inicio temporario
 
 var perguntas = [];
 
@@ -30,7 +27,11 @@ setObjectLocalStorage("perguntas", perguntas);
 
 
 
-
+//Classes
+function Pergunta(id, pergunta){
+    this.id = id;
+    this.pergunta = pergunta;
+}
 
 
 //Funções Auxiliares
