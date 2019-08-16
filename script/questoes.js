@@ -24,8 +24,26 @@ for (var i=0; i<comidas.length; i++){
 }
 setObjectLocalStorage("perguntas", perguntas);
 
+//Funções
 
-
+function preenche(){
+    perguntas = getObjectLocalStorage("perguntas");
+    var meuParagrafo = document.getElementById("questionario")
+    var resultado = "<form>"
+    resultado += "<br/><br/>"
+    
+    for (var i=0; i<perguntas.length; i++){
+        var numero = parseInt(i)+1;
+        var questao = perguntas[i];
+        resultado += "<div>";
+        resultado += "<label for='questao\"+numero+\"'>Questão "+numero+":"+questao.pergunta+" </label>"
+        resultado += "<input type='text' id='q\"+i+\"'/>"
+        resultado+="</div>"
+    }
+    resultado += "<input type='submit' value='Enviar'>"
+    resultado+="</form>";
+    meuParagrafo.innerHTML = resultado;
+}
 
 //Classes
 function Pergunta(id, pergunta){
