@@ -111,11 +111,6 @@ function valida(){
 
 //Classes
 
-function Pergunta(id, pergunta){
-    this.id = id;
-    this.pergunta = pergunta;
-}
-
 function Usuario(nome, foto, nascimento, genero, idadeP, generoP, email, senha){
     this.foto = foto;
     this.nome = nome;
