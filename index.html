@@ -9,23 +9,14 @@
         <button onclick="logout()">Sair</button>
         <button onclick="window.location.href = 'update.html'">Editar</button>
     </div>
-    <form id="questionario">
-        <div>
-            <label for="questao1">Questão 1: </label>
-            <input type="text" id="q1"/>
-        </div>
-        <div>
-            <label for="questao2">Questão 2: </label>
-            <input type="text" id="q2"/>
-        </div>
-        <div>
-            <label for="questao3">Questão 3: </label>
-            <input type="text" id="q3"/>
-        </div>
+    <form onload="preenche()" id="questionario">
+        <br/><br/>
+        <input type="submit" value="Enviar">
     </form>
     
     <!-- Scripts -->
         <script src="script/match.js"></script>
         <script src="script/core.js"></script>
+        <script src="script/questoes.js"></script>
 </body>
 </html>
