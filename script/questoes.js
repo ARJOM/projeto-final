@@ -26,24 +26,24 @@ setObjectLocalStorage("perguntas", perguntas);
 
 //Funções
 
-function preenche(){
-    perguntas = getObjectLocalStorage("perguntas");
-    var meuParagrafo = document.getElementById("questionario")
-    var resultado = "<form>"
-    resultado += "<br/><br/>"
+//function preenche(){
+//    perguntas = getObjectLocalStorage("perguntas");
+//    var meuParagrafo = document.getElementById("questionario")
+//    var resultado = "<form>"
+//    resultado += "<br/><br/>"
     
-    for (var i=0; i<perguntas.length; i++){
-        var numero = parseInt(i)+1;
-        var questao = perguntas[i];
-        resultado += "<div>";
-        resultado += "<label for='questao\"+numero+\"'>Questão "+numero+":"+questao.pergunta+" </label>"
-        resultado += "<input type='text' id='q\"+i+\"'/>"
-        resultado+="</div>"
-    }
-    resultado += "<input type='submit' value='Enviar'>"
-    resultado+="</form>";
-    meuParagrafo.innerHTML = resultado;
-}
+//   for (var i=0; i<perguntas.length; i++){
+//        var numero = parseInt(i)+1;
+//        var questao = perguntas[i];
+//        resultado += "<div>";
+//       resultado += "<label for='questao\"+numero+\"'>Questão "+numero+":"+questao.pergunta+" </label></br>"
+//        resultado += "<button value='0'>Não sou capaz de opinar</button><button value='1'>Odeio</button><button value='2'>Não Gosto</button><button value='3'>Indiferente</button><button value='4'>Gosto</button><button value='5'>Amo</button>"
+//        resultado+="</div>"
+//    }
+//    resultado += "<input type='submit' value='Enviar'>"
+//    resultado+="</form>";
+//    meuParagrafo.innerHTML = resultado;
+//}
 
 //Classes
 function Pergunta(id, pergunta){
