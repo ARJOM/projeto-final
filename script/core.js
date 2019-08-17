@@ -81,7 +81,7 @@ function update(){
     if (senha == usuario.senha){
         usuario.senha = document.getElementById("newsenha").value;
     }
-    
+
 }
 
 function remove(){
@@ -102,6 +102,61 @@ function remove(){
         window.alert("Usuário logado não consta como cadastrado!!!")
         return false;
     }
+}
+
+function recebe(){
+    var usuario = getObjectLocalStorage("logado");
+    console.log(usuario.nome);
+    var respostas = [];
+    for (var i = 1; i<=12; i++){
+        var pergunta = "pergunta"+i;
+        var radio = document.getElementsByName(pergunta);
+        var valor = getChecked(radio);
+        console.log(valor)
+        respostas.push(valor);
+        console.log(respostas);
+    }
+    usuario.lista = respostas;
+    var cadastrados = getObjectLocalStorage("cadastrados");
+    var indice = buscaIndice(usuario.email);
+    cadastrados[indice] = usuario;
+    setObjectLocalStorage("logado", usuario);
+    setObjectLocalStorage("cadastrados", cadastrados);
+}
+
+function calculaMatch(){
+    var usuario = getObjectLocalStorage("logado");
+    var cadastrados = getObjectLocalStorage("cadastrados");
+    var resultado = [];
+    for (var i=0; i<cadastrados.length; i++){
+        var user = cadastrados[i];
+        if (!isEquivalent(usuario, user)){
+            var cosseno = calculaCosseno(user.lista, usuario.lista);
+            var match = new Match(user.email, cosseno);
+            resultado.push(match);
+        }
+    }
+    usuario.match = resultado;
+    var indice = buscaIndice(usuario.email);
+    cadastrados[indice] = usuario;
+    setObjectLocalStorage("logado", usuario);
+    setObjectLocalStorage("cadastrados", cadastrados);
+}
+
+function exibeMatch(){
+    calculaMatch();
+    var paragrafo = document.getElementById("lista");
+    var usuario = getObjectLocalStorage("logado");
+    var resultado = "<ul>";
+    var matchs = usuario.match;
+
+    for (var i = 0; i<matchs.length; i++){
+        var match = matchs[i];
+        var user =  buscaUsuario(match.email);
+        resultado += "<li>"+user.nome+"|"+match.coeficiente+"</li>"
+    }
+    resultado += "</ul>"
+    paragrafo.innerHTML = resultado;
 }
 
 function valida(){
@@ -125,6 +180,7 @@ function Usuario(nome, foto, nascimento, genero, idadeP, generoP, email, senha){
     this.email = email;
     this.senha = senha;
 
+    this.lista = [];
     this.match = [];
 
     this.descricao = function(){
@@ -132,7 +188,34 @@ function Usuario(nome, foto, nascimento, genero, idadeP, generoP, email, senha){
     }
 }
 
+function Match(email, coeficiente){
+    this.email = email;
+    this.coeficiente = coeficiente;
+}
+
 //Funções Auxiliares
+
+function buscaUsuario(email){
+    var cadastrados = getObjectLocalStorage("cadastrados");
+    for (var i=0; i<cadastrados.length; i++){
+        var usuario = cadastrados[i];
+        if (usuario.email == email){
+            return usuario;
+        }
+    }
+    return null;  
+}
+
+function buscaIndice(email){
+    var cadastrados = getObjectLocalStorage("cadastrados");
+    for (var i=0; i<cadastrados.length; i++){
+        var usuario = cadastrados[i];
+        if (usuario.email == email){
+            return i;
+        }
+    }
+    return null;  
+}
 
 function calculaIdade(nascimento){
     var data = new Date();
