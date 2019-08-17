@@ -1,10 +1,10 @@
 function calculaModulo(lista){
     var soma = 0;
-    for (var i =0; i<lista.length; i++){
+    for (var i = 0; i<lista.length; i++){
         item = lista[i];
         soma += item*item;
     }
-    return soma;
+    return Math.sqrt(soma);
 }
 
 function calculaProduto(lista1, lista2){
