@@ -130,7 +130,7 @@ function calculaMatch(){
     var resultado = [];
     for (var i=0; i<cadastrados.length; i++){
         var user = cadastrados[i];
-        if (!isEquivalent(usuario, user)){
+        if (usuario.email != user.email){
             var cosseno = calculaCosseno(user.lista, usuario.lista);
             var match = new Match(user.email, cosseno);
             resultado.push(match);
