@@ -56,7 +56,8 @@ function cadastro() {
         setObjectLocalStorage("cadastrados", cadastrados);
         setObjectLocalStorage("logado", usuario);
         window.alert("Bem vindo "+usuario.nome+"!");
-        window.location.href = "update.html";
+        //window.location.href = "update.html";
+        window.location.href = "index.html";
     } else {
         window.alert("API Web Storage não encontrada");
     }
@@ -80,7 +81,7 @@ function update(){
     if (senha == usuario.senha){
         usuario.senha = document.getElementById("newsenha").value;
     }
-
+    
 }
 
 function remove(){

@@ -4,7 +4,7 @@
     <meta charset="UTF-8">
     <title>Tribos</title>
 </head>
-<body>
+<body onload="valida()">
     <div>
         <button onclick="logout()">Sair</button>
         <button onclick="window.location.href = 'update.html'">Editar</button>
@@ -253,6 +253,7 @@
             <input type="radio" name="pergunta12" value="5"/>
             <label for="um">Amo</label>
         </div>
+        <input type='submit' onclick="calculaCoeficiente()" value='Enviar'>
     </div>
     
     <!-- Scripts -->
