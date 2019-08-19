@@ -136,7 +136,8 @@ function calculaMatch(){
             resultado.push(match);
         }
     }
-    usuario.match = resultado;
+    resultadof = insertion_Sort(resultado)
+    usuario.match = resultadof;
     var indice = buscaIndice(usuario.email);
     cadastrados[indice] = usuario;
     setObjectLocalStorage("logado", usuario);
@@ -291,4 +292,30 @@ function setObjectLocalStorage(key,value){
 function getObjectLocalStorage(key){
 	var value = localStorage.getItem(key);
     return value && JSON.parse(value);
+}
+
+function insertion_Sort(arr){
+  for (var i = 1; i < arr.length; i++) 
+  {
+    if (arr[i].coeficiente > arr[0].coeficiente) 
+    {
+      //move current element to the first position
+      arr.unshift(arr.splice(i,1)[0]);
+    } 
+    else if (arr[i].coeficiente < arr[i-1].coeficiente) 
+    {
+      //leave current element where it is
+      continue;
+    } 
+    else {
+      //find where element should go
+      for (var j = 1; j < i; j++) {
+        if (arr[i].coeficiente < arr[j-1].coeficiente && arr[i].coeficiente > arr[j].coeficiente){
+          //move element
+          arr.splice(j,0,arr.splice(i,1)[0]);
+        }
+      }
+    }
+  }
+  return arr;
 }
