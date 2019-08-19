@@ -153,7 +153,8 @@ function exibeMatch(){
     for (var i = 0; i<matchs.length; i++){
         var match = matchs[i];
         var user =  buscaUsuario(match.email);
-        resultado += "<li>"+user.nome+"|"+match.coeficiente+"</li>"
+        var porcentagem = (match.coeficiente*100).toFixed(2)
+        resultado += "<li>"+user.nome+" "+porcentagem+"%</li>"
     }
     resultado += "</ul>"
     paragrafo.innerHTML = resultado;
