@@ -148,16 +148,16 @@ function exibeMatch(){
     calculaMatch();
     var paragrafo = document.getElementById("lista");
     var usuario = getObjectLocalStorage("logado");
-    var resultado = "<ul>";
+    var resultado = "<table><tr><th>#</th><th>Nome</th><th>Compatibilidade</th></tr>";
     var matchs = usuario.match;
 
     for (var i = 0; i<matchs.length; i++){
         var match = matchs[i];
         var user =  buscaUsuario(match.email);
         var porcentagem = (match.coeficiente*100).toFixed(2)
-        resultado += "<li>"+user.nome+" "+porcentagem+"%</li>"
+        resultado += "<tr><td>"+(i+1)+"</td><td>"+user.nome+"</td><td> "+porcentagem+"%</td></tr>"
     }
-    resultado += "</ul>"
+    resultado += "</table>"
     paragrafo.innerHTML = resultado;
 }
 
