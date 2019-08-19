@@ -1,15 +1,10 @@
 //Globais
 
-perguntas = [];
-
 cadastrados = getObjectLocalStorage("cadastrados");
 if (cadastrados == null) {
     cadastrados = [];
     setObjectLocalStorage("cadastrados", cadastrados);
 } 
-
-//Funções Principais
-
 
 //Usuário
 

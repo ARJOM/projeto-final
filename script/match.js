@@ -4,7 +4,7 @@ function recebe(){
     var usuario = getObjectLocalStorage("logado");
     console.log(usuario.nome);
     var respostas = [];
-    for (var i = 1; i<=12; i++){
+    for (var i = 1; i<=perguntas.length; i++){
         var pergunta = "pergunta"+i;
         var radio = document.getElementsByName(pergunta);
         var valor = getChecked(radio);
