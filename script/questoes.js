@@ -28,28 +28,43 @@ setObjectLocalStorage("perguntas", perguntas);
 //Funções
 function preenche(){
     perguntas = getObjectLocalStorage("perguntas");
-    var meuParagrafo = document.getElementById("questionario")
-    var resultado = "<br/><br/>"
-    
-    var musicas = buscaCategorias("musicas");
-    var comidas = buscaCategorias("comidas");
-    var generos = buscaCategorias("generos");
+    var meuParagrafo = document.getElementById("questionario");
+    var resultado = "<br/><br/>";
 
-   for (var i=0; i<perguntas.length; i++){
-        var numero = parseInt(i)+1;
-        var questao = perguntas[i];
-        resultado += "<div>";
-        resultado += "<p>"+questao.pergunta+"</p>";
-        resultado += "<input type='radio' name='pergunta"+numero+"' value='0'/><label for='zero'>Não sou capaz de opinar</label>";
-        resultado += "<input type='radio' name='pergunta"+numero+"' value='1'/><label for='um'>Odeio</label>";
-        resultado += "<input type='radio' name='pergunta"+numero+"' value='2'/><label for='um'>Não gosto</label>";
-        resultado += "<input type='radio' name='pergunta"+numero+"' value='3'/><label for='um'>Indiferente</label>";
-        resultado += "<input type='radio' name='pergunta"+numero+"' value='4'/><label for='um'>Gosto</label>";
-        resultado += "<input type='radio' name='pergunta"+numero+"' value='5'/><label for='um'>Amo</label>";
-        resultado+="</div>";
-    }
+
+    var musicas = buscaCategorias("musicas");
+    resultado += "<h2>Musica:</h2>"+render(musicas);
+    var comidas = buscaCategorias("comidas");
+    resultado += "<h2>Comidas:</h2>"+render(comidas);
+    var generos = buscaCategorias("filmes");
+    resultado += "<h2>Filmes:</h2>"+render(generos);
+
     resultado += "<input type='submit' onclick='recebe()' value='Enviar'>"
     meuParagrafo.innerHTML = resultado;
+    check();
+}
+
+
+function check(){
+
+}
+
+function render(lista){
+    var resultado = "";
+    for (var i=0; i<lista.length; i++){
+        var questao = lista[i];
+        resultado += "<div>";
+        resultado += "<p>"+questao.pergunta+"</p>";
+        resultado += "<input type='radio' name='"+questao.pergunta+"' value='0'/><label for='zero'>Não sou capaz de opinar</label>";
+        resultado += "<input type='radio' name='"+questao.pergunta+"' value='1'/><label for='um'>Odeio</label>";
+        resultado += "<input type='radio' name='"+questao.pergunta+"' value='2'/><label for='um'>Não gosto</label>";
+        resultado += "<input type='radio' name='"+questao.pergunta+"' value='3'/><label for='um'>Indiferente</label>";
+        resultado += "<input type='radio' name='"+questao.pergunta+"' value='4'/><label for='um'>Gosto</label>";
+        resultado += "<input type='radio' name='"+questao.pergunta+"' value='5'/><label for='um'>Amo</label>";
+        resultado+="</div>";
+    }
+    resultado+="<br/>";
+    return resultado;
 }
 
 //Classes
