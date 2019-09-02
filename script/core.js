@@ -38,36 +38,41 @@ function cadastro() {
     var nascimento = document.getElementById("nascimento").value;
     var radio = document.getElementsByName("genero");
     var genero = getChecked(radio);
-    var min = document.getElementById("minimo");
-    var max = document.getElementById("maximo");
+    var min = parseInt(document.getElementById("minimo"));
+    var max = parseInt(document.getElementById("maximo"));
     var idadeP = [min, max];
+    idadeP = insertion_Sort(idadeP);
     var radioP = document.getElementsByName("generoP");
     var generoP = getChecked(radioP);
     
-    var usuario = new Usuario(nome, foto, nascimento, genero, null, null, email, senha);
-    user = converteObjetoToJson(usuario);
+    if (buscaUsuario(email)==null){
+        var usuario = new Usuario(nome, foto, nascimento, genero, idadeP, generoP, email, senha);
+        user = converteObjetoToJson(usuario);
 
-    // Add a new document in collection "usuarios"
-    _BANCO.collection("usuarios").doc(email).set({
-        user: user
-    })
-    .then(function() {
-        window.alert("Cadastrado com sucesso");
-    })
-    .catch(function(error) {
-        console.error("Error adding document: ", error);
-        window.alert("Algo deu errado na criação do seu cadastro");
-    });
+        // Add a new document in collection "usuarios"
+        _BANCO.collection("usuarios").doc(email).set({
+            user: user
+        })
+        .then(function() {
+            window.alert("Cadastrado com sucesso");
+        })
+        .catch(function(error) {
+            window.alert("Algo deu errado na criação do seu cadastro");
+        });
+    } else{
+        window.alert("E-mail já cadastrado!")
+    }
 }
 
 //
 
 function logout(){
     localStorage.removeItem("logado");
-    window.location.href = "login.html";
+    valida();
 }
 
 function preenche(){
+    valida();
     var usuario = getObjectLocalStorage("logado");
     document.getElementById("nome").value = usuario.nome;
     document.getElementById("email").value = usuario.email;
@@ -75,7 +80,6 @@ function preenche(){
 }
 
 function update(){
-    var cadastrados = getObjectLocalStorage("cadastrados");
     var usuario = getObjectLocalStorage("logado");
     var indice = buscaIndice(usuario.email);
     var senha = document.getElementById("oldsenha").value; 
