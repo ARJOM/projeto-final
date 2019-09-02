@@ -1,3 +1,6 @@
+//Globais
+var _BANCO = firebase.firestore();
+
 //Usuário
 
 function login() {
@@ -40,9 +43,9 @@ function adicionarDados() {
     var genero = getChecked(radio);
     var usuario = new Usuario(nome, null, nascimento, genero, null, null, email, senha);
 
-    // Add a new document in collection "cities"
+    // Add a new document in collection "usuarios"
     _BANCO.collection("usuarios").doc(email).set({
-        user: usuario
+        user: converteObjetoToJson(usuario)
     })
     .then(function() {
         window.alert("Cadastrado com sucesso");
@@ -151,14 +154,13 @@ function Usuario(nome, foto, nascimento, genero, idadeP, generoP, email, senha){
 //Funções Auxiliares
 
 function buscaUsuario(email){
-    var cadastrados = getObjectLocalStorage("cadastrados");
-    for (var i=0; i<cadastrados.length; i++){
-        var usuario = cadastrados[i];
-        if (usuario.email == email){
-            return usuario;
-        }
-    }
-    return null;  
+    var usuario;
+    _BANCO.collection("usuarios").get(email)
+    .then((user) => {
+        usuario = user;
+    })
+    .catch(usuario = null);
+    return usuario;  
 }
 
 function buscaIndice(email){
@@ -245,6 +247,14 @@ function setObjectLocalStorage(key,value){
 function getObjectLocalStorage(key){
 	var value = localStorage.getItem(key);
     return value && JSON.parse(value);
+}
+
+function converteJsonToObjeto(value){
+    return JSON.parse(value);
+}
+
+function converteObjetoToJson(value){
+    return JSON.stringify(value);
 }
 
 function insertion_Sort(arr){
