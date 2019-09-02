@@ -133,7 +133,7 @@ function Usuario(nome, foto, nascimento, genero, idadeP, generoP, email, senha){
 }
 
 //Funções Auxiliares
-
+//TODO concertar erro na função de busca
 function buscaUsuario(email){
     var usuario;
     _BANCO.collection("usuarios").get(email)
