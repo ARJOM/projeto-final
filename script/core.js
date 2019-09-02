@@ -9,7 +9,7 @@ function login() {
     var senha = document.getElementById("senha").value;
 
     var user = buscaUsuario(email);
-    
+
     if (user==null){
         window.alert("E-mail não cadastrado");
         return false;
@@ -31,17 +31,25 @@ function login() {
 }
 
 function cadastro() {
+    var foto = document.getElementById("avatar").value;
     var nome = document.getElementById("nome").value;
     var email = document.getElementById("email").value;
     var senha = document.getElementById("senha").value;
     var nascimento = document.getElementById("nascimento").value;
     var radio = document.getElementsByName("genero");
     var genero = getChecked(radio);
-    var usuario = new Usuario(nome, null, nascimento, genero, null, null, email, senha);
+    var min = document.getElementById("minimo");
+    var max = document.getElementById("maximo");
+    var idadeP = [min, max];
+    var radioP = document.getElementsByName("generoP");
+    var generoP = getChecked(radioP);
+    
+    var usuario = new Usuario(nome, foto, nascimento, genero, null, null, email, senha);
+    user = converteObjetoToJson(usuario);
 
     // Add a new document in collection "usuarios"
     _BANCO.collection("usuarios").doc(email).set({
-        user: converteObjetoToJson(usuario)
+        user: user
     })
     .then(function() {
         window.alert("Cadastrado com sucesso");
@@ -52,28 +60,7 @@ function cadastro() {
     });
 }
 
-function cadastro() {
-    if (typeof (Storage) !== "undefined") {
-        var nome = document.getElementById("nome").value;
-        var email = document.getElementById("email").value;
-        var senha = document.getElementById("senha").value;
-        var nascimento = document.getElementById("nascimento").value;
-        console.log(nascimento);
-        var radio = document.getElementsByName("genero");
-        var genero = getChecked(radio);
-
-        var usuario = new Usuario(nome, null, nascimento, genero, null, null, email, senha);
-        cadastrados = getObjectLocalStorage("cadastrados");
-        cadastrados.push(usuario);
-        setObjectLocalStorage("cadastrados", cadastrados);
-        setObjectLocalStorage("logado", usuario);
-        window.alert("Bem vindo "+usuario.nome+"!");
-        //window.location.href = "update.html";
-        window.location.href = "index.html";
-    } else {
-        window.alert("API Web Storage não encontrada");
-    }
-}
+//
 
 function logout(){
     localStorage.removeItem("logado");
@@ -99,22 +86,16 @@ function update(){
 }
 
 function remove(){
-    var cadastrados = getObjectLocalStorage("cadastrados");
     var usuario = getObjectLocalStorage("logado");
     var sure = confirm("Você está prestes a excluir essa conta.\nDeseja continuar?");
     if (sure){
-        for (var i = 0; i < cadastrados.length; i++){
-            var user = cadastrados[i];
-            if (isEquivalent(user, usuario)){
-                cadastrados.splice(i, 1);
-                setObjectLocalStorage("cadastrados", cadastrados);
-                localStorage.removeItem("logado");
-                window.location.href = "login.html";
-                return true;
-            }
-        }
-        window.alert("Usuário logado não consta como cadastrado!!!")
-        return false;
+        _BANCO.collection("usuarios").delete(usuario.email).then(function(){
+            window.alert("Conta deletada com sucesso!");
+            valida();
+        })
+        .catch(function(error) {
+            window.alert("Usuário logado não consta como cadastrado!!!")
+        });
     }
 }
 
@@ -153,7 +134,7 @@ function buscaUsuario(email){
     var usuario;
     _BANCO.collection("usuarios").get(email)
     .then((user) => {
-        usuario = user;
+        usuario = converteJsonToObjeto(user);
     })
     .catch(usuario = null);
     return usuario;
