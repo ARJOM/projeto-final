@@ -1,11 +1,3 @@
-//Globais
-
-cadastrados = getObjectLocalStorage("cadastrados");
-if (cadastrados == null) {
-    cadastrados = [];
-    setObjectLocalStorage("cadastrados", cadastrados);
-} 
-
 //Usuário
 
 function login() {
@@ -36,6 +28,29 @@ function login() {
     }
     window.alert("E-mail não cadastrado");
     return false;
+}
+
+function adicionarDados() {
+
+    var nome = document.getElementById("nome").value;
+    var email = document.getElementById("email").value;
+    var senha = document.getElementById("senha").value;
+    var nascimento = document.getElementById("nascimento").value;
+    var radio = document.getElementsByName("genero");
+    var genero = getChecked(radio);
+    var usuario = new Usuario(nome, null, nascimento, genero, null, null, email, senha);
+
+    // Add a new document in collection "cities"
+    _BANCO.collection("usuarios").doc(email).set({
+        user: usuario
+    })
+    .then(function() {
+        window.alert("Cadastrado com sucesso");
+    })
+    .catch(function(error) {
+        console.error("Error adding document: ", error);
+        window.alert("Algo de errado não está certo");
+    });
 }
 
 function cadastro() {
