@@ -1,5 +1,6 @@
 //Globais
 var _BANCO = firebase.firestore();
+console.log(_BANCO);
 
 //Usuário
 
@@ -7,34 +8,29 @@ function login() {
     var email = document.getElementById("email").value;
     var senha = document.getElementById("senha").value;
 
-    var cadastrados = getObjectLocalStorage("cadastrados");
-
-    for (var i = 0; i < cadastrados.length; i++){
-        usuario = cadastrados[i];
-        if (usuario.email == email){
-            if (usuario.senha == senha){
-                setObjectLocalStorage("logado", usuario);
-                if (usuario.genero == "f"){
-                    window.alert("Bem vinda "+usuario.nome+"!");
-                }
-                else {
-                    window.alert("Bem vindo "+usuario.nome+"!");
-                }
-                window.location.href = "index.html";
-                return true;
-            }
-            else {
-                window.alert("Senha incorreta");
-                return false;
-            }
-        }
+    var user = buscaUsuario(email);
+    
+    if (user==null){
+        window.alert("E-mail não cadastrado");
+        return false;
     }
-    window.alert("E-mail não cadastrado");
-    return false;
+    if (user.senha==senha){
+        setObjectLocalStorage("logado", user);
+        if (user.genero == "f"){
+            window.alert("Bem vinda "+user.nome+"!");
+        }
+        else {
+            window.alert("Bem vindo "+user.nome+"!");
+        }
+        window.location.href = "index.html";
+        return true;
+    } else {
+        window.alert("Senha incorreta");
+        return false;
+    }
 }
 
-function adicionarDados() {
-
+function cadastro() {
     var nome = document.getElementById("nome").value;
     var email = document.getElementById("email").value;
     var senha = document.getElementById("senha").value;
@@ -52,7 +48,7 @@ function adicionarDados() {
     })
     .catch(function(error) {
         console.error("Error adding document: ", error);
-        window.alert("Algo de errado não está certo");
+        window.alert("Algo deu errado na criação do seu cadastro");
     });
 }
 
@@ -160,7 +156,7 @@ function buscaUsuario(email){
         usuario = user;
     })
     .catch(usuario = null);
-    return usuario;  
+    return usuario;
 }
 
 function buscaIndice(email){
