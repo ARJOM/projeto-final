@@ -136,11 +136,18 @@ function Usuario(nome, foto, nascimento, genero, idadeP, generoP, email, senha){
 //TODO concertar erro na função de busca
 function buscaUsuario(email){
     var usuario;
-    _BANCO.collection("usuarios").get(email)
-    .then((user) => {
-        usuario = converteJsonToObjeto(user);
+    var busca = email.toString();
+    var u = _BANCO.collection("usuarios").doc(busca);
+    u.get().then(function(doc) {
+        if (doc.exists) {
+            usuario = converteJsonToObjeto(user);
+        } else {
+            usuario = null;
+        }
     })
-    .catch(usuario = null);
+    .catch(function(){
+        usuario = null;
+    });
     return usuario;
 }
 
