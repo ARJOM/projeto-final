@@ -1,6 +1,10 @@
 //Globais
-var _BANCO = firebase.firestore();
-console.log(_BANCO);
+
+cadastrados = getObjectLocalStorage("cadastrados");
+if (cadastrados == null) {
+    cadastrados = [];
+    setObjectLocalStorage("cadastrados", cadastrados);
+} 
 
 //Usuário
 
@@ -8,70 +12,61 @@ function login() {
     var email = document.getElementById("email").value;
     var senha = document.getElementById("senha").value;
 
-    var user = buscaUsuario(email);
-    if (user==null){
-        window.alert("E-mail não cadastrado");
-        return false;
-    }
-    if (user.senha==senha){
-        setObjectLocalStorage("logado", user);
-        if (user.genero == "f"){
-            window.alert("Bem vinda "+user.nome+"!");
+    var cadastrados = getObjectLocalStorage("cadastrados");
+
+    for (var i = 0; i < cadastrados.length; i++){
+        usuario = cadastrados[i];
+        if (usuario.email == email){
+            if (usuario.senha == senha){
+                setObjectLocalStorage("logado", usuario);
+                if (usuario.genero == "f"){
+                    window.alert("Bem vinda "+usuario.nome+"!");
+                }
+                else {
+                    window.alert("Bem vindo "+usuario.nome+"!");
+                }
+                window.location.href = "index.html";
+                return true;
+            }
+            else {
+                window.alert("Senha incorreta");
+                return false;
+            }
         }
-        else {
-            window.alert("Bem vindo "+user.nome+"!");
-        }
-        window.location.href = "index.html";
-        return true;
-    } else {
-        window.alert("Senha incorreta");
-        return false;
     }
+    window.alert("E-mail não cadastrado");
+    return false;
 }
 
 function cadastro() {
-    var foto = document.getElementById("avatar").value;
-    var nome = document.getElementById("nome").value;
-    var email = document.getElementById("email").value;
-    var senha = document.getElementById("senha").value;
-    var nascimento = document.getElementById("nascimento").value;
-    var radio = document.getElementsByName("genero");
-    var genero = getChecked(radio);
-    var min = parseInt(document.getElementById("minimo"));
-    var max = parseInt(document.getElementById("maximo"));
-    var idadeP = [min, max];
-    idadeP = insertion_Sort(idadeP);
-    var radioP = document.getElementsByName("generoP");
-    var generoP = getChecked(radioP);
-    
-    if (buscaUsuario(email)==null){
-        var usuario = new Usuario(nome, foto, nascimento, genero, idadeP, generoP, email, senha);
-        user = converteObjetoToJson(usuario);
+    if (typeof (Storage) !== "undefined") {
+        var nome = document.getElementById("nome").value;
+        var email = document.getElementById("email").value;
+        var senha = document.getElementById("senha").value;
+        var nascimento = document.getElementById("nascimento").value;
+        console.log(nascimento);
+        var radio = document.getElementsByName("genero");
+        var genero = getChecked(radio);
 
-        // Add a new document in collection "usuarios"
-        _BANCO.collection("usuarios").doc(email).set({
-            user: user
-        })
-        .then(function() {
-            window.alert("Cadastrado com sucesso");
-        })
-        .catch(function(error) {
-            window.alert("Algo deu errado na criação do seu cadastro");
-        });
-    } else{
-        window.alert("E-mail já cadastrado!")
+        var usuario = new Usuario(nome, null, nascimento, genero, null, null, email, senha);
+        cadastrados = getObjectLocalStorage("cadastrados");
+        cadastrados.push(usuario);
+        setObjectLocalStorage("cadastrados", cadastrados);
+        setObjectLocalStorage("logado", usuario);
+        window.alert("Bem vindo "+usuario.nome+"!");
+        //window.location.href = "update.html";
+        window.location.href = "index.html";
+    } else {
+        window.alert("API Web Storage não encontrada");
     }
 }
 
-//
-
 function logout(){
     localStorage.removeItem("logado");
-    valida();
+    window.location.href = "login.html";
 }
 
 function preenche(){
-    valida();
     var usuario = getObjectLocalStorage("logado");
     document.getElementById("nome").value = usuario.nome;
     document.getElementById("email").value = usuario.email;
@@ -79,6 +74,7 @@ function preenche(){
 }
 
 function update(){
+    var cadastrados = getObjectLocalStorage("cadastrados");
     var usuario = getObjectLocalStorage("logado");
     var indice = buscaIndice(usuario.email);
     var senha = document.getElementById("oldsenha").value; 
@@ -89,16 +85,22 @@ function update(){
 }
 
 function remove(){
+    var cadastrados = getObjectLocalStorage("cadastrados");
     var usuario = getObjectLocalStorage("logado");
     var sure = confirm("Você está prestes a excluir essa conta.\nDeseja continuar?");
     if (sure){
-        _BANCO.collection("usuarios").delete(usuario.email).then(function(){
-            window.alert("Conta deletada com sucesso!");
-            valida();
-        })
-        .catch(function(error) {
-            window.alert("Usuário logado não consta como cadastrado!!!")
-        });
+        for (var i = 0; i < cadastrados.length; i++){
+            var user = cadastrados[i];
+            if (isEquivalent(user, usuario)){
+                cadastrados.splice(i, 1);
+                setObjectLocalStorage("cadastrados", cadastrados);
+                localStorage.removeItem("logado");
+                window.location.href = "login.html";
+                return true;
+            }
+        }
+        window.alert("Usuário logado não consta como cadastrado!!!")
+        return false;
     }
 }
 
@@ -132,22 +134,16 @@ function Usuario(nome, foto, nascimento, genero, idadeP, generoP, email, senha){
 }
 
 //Funções Auxiliares
-//TODO concertar erro na função de busca
+
 function buscaUsuario(email){
-    var busca = email.toString();
-    var u = _BANCO.collection("usuarios").doc(busca);
-    var usuario;
-    u.get().then(function(doc) {
-        if (doc.exists) {
-            usuario = converteJsonToObjeto(doc);
-        } else {
-            usuario = null;
+    var cadastrados = getObjectLocalStorage("cadastrados");
+    for (var i=0; i<cadastrados.length; i++){
+        var usuario = cadastrados[i];
+        if (usuario.email == email){
+            return usuario;
         }
-    })
-    .catch(function(){
-        usuario = null;
-    });
-    return usuario;
+    }
+    return null;  
 }
 
 function buscaIndice(email){
@@ -191,60 +187,6 @@ function calculaIdade(nascimento){
     }
 }
 
-function getChecked(lista){
-    for (var i=0; i < lista.length; i++){
-        if (lista[i].checked){
-            return lista[i].value;
-        }
-    }
-    return null;
-}
-
-function setObjectLocalStorage(key,value){
-	localStorage.setItem(key, JSON.stringify(value));
-}
-
-function getObjectLocalStorage(key){
-	var value = localStorage.getItem(key);
-    return value && JSON.parse(value);
-}
-
-function converteJsonToObjeto(value){
-    return JSON.parse(value);
-}
-
-function converteObjetoToJson(value){
-    return JSON.stringify(value);
-}
-
-
-//Funções auxiliares externas
-
-function insertion_Sort(arr){
-  for (var i = 1; i < arr.length; i++) 
-  {
-    if (arr[i].coeficiente > arr[0].coeficiente) 
-    {
-      //move current element to the first position
-      arr.unshift(arr.splice(i,1)[0]);
-    } 
-    else if (arr[i].coeficiente < arr[i-1].coeficiente) 
-    {
-      //leave current element where it is
-      continue;
-    } 
-    else {
-      //find where element should go
-      for (var j = 1; j < i; j++) {
-        if (arr[i].coeficiente < arr[j-1].coeficiente && arr[i].coeficiente > arr[j].coeficiente){
-          //move element
-          arr.splice(j,0,arr.splice(i,1)[0]);
-        }
-      }
-    }
-  }
-  return arr;
-}
 
 function isEquivalent(a, b) {
     // Create arrays of property names
@@ -270,4 +212,48 @@ function isEquivalent(a, b) {
     // If we made it this far, objects
     // are considered equivalent
     return true;
+}
+
+function getChecked(lista){
+    for (var i=0; i < lista.length; i++){
+        if (lista[i].checked){
+            return lista[i].value;
+        }
+    }
+    return null;
+}
+
+function setObjectLocalStorage(key,value){
+	localStorage.setItem(key, JSON.stringify(value));
+}
+
+function getObjectLocalStorage(key){
+	var value = localStorage.getItem(key);
+    return value && JSON.parse(value);
+}
+
+function insertion_Sort(arr){
+  for (var i = 1; i < arr.length; i++) 
+  {
+    if (arr[i].coeficiente > arr[0].coeficiente) 
+    {
+      //move current element to the first position
+      arr.unshift(arr.splice(i,1)[0]);
+    } 
+    else if (arr[i].coeficiente < arr[i-1].coeficiente) 
+    {
+      //leave current element where it is
+      continue;
+    } 
+    else {
+      //find where element should go
+      for (var j = 1; j < i; j++) {
+        if (arr[i].coeficiente < arr[j-1].coeficiente && arr[i].coeficiente > arr[j].coeficiente){
+          //move element
+          arr.splice(j,0,arr.splice(i,1)[0]);
+        }
+      }
+    }
+  }
+  return arr;
 }

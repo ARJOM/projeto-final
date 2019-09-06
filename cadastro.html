@@ -12,10 +12,6 @@
             <input type="text" id="nome" placeholder="Ex: João Ferreira" >
         </div>
         <div>
-            <label for="avatar">Escolha uma foto de perfil:</label>
-            <input type="file" id="avatar" name="avatar" accept="image/png, image/jpeg">
-        </div>
-        <div>
             <label for="email">Email:</label>
             <input type="email" id="email" placeholder="seuemail@email.com">
         </div>
@@ -33,18 +29,6 @@
             <input type="radio" name="genero" value="f"> Feminino
         </div>
         <div>
-            <label for="genero">Gênero procurado:</label>
-            <input type="radio" name="generoP" value="m"> Masculino
-            <input type="radio" name="generoP" value="f"> Feminino
-            <input type="radio" name="generoP" value="a" checked> Ambos
-        </div>
-        <div id="idade">
-            <label for="idade">Idade Mínima</label>
-            <input type="text" id="minimo">
-            <label for="idade">Idade Máxima</label>
-            <input type="text" id="maximo">
-        </div>
-        <div>
             <button onclick="cadastro()">Cadastrar</button>
         </div>
     </div>
@@ -54,20 +38,6 @@
     </div>
     
     <!-- Scripts -->
-        <!-- The core Firebase JS SDK is always required and must be listed first -->
-    <script src="https://www.gstatic.com/firebasejs/6.5.0/firebase-app.js"></script>
-
-        <!-- TODO: Add SDKs for Firebase products that you want to use
-     https://firebase.google.com/docs/web/setup#config-web-app -->
-     <script src="https://www.gstatic.com/firebasejs/6.4.0/firebase-firestore.js"></script>
-
-        <!-- Confugurações do projeto Firebase-->
-        <script src="./script/firebase.js"></script>
-
-        <!-- Scripts com funcionalidades -->
-        <script src="script/match.js"></script>
         <script src="script/core.js"></script>
-        <script src="script/questoes.js"></script>
-
 </body>
 </html>
