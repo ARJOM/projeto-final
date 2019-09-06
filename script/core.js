@@ -9,7 +9,6 @@ function login() {
     var senha = document.getElementById("senha").value;
 
     var user = buscaUsuario(email);
-
     if (user==null){
         window.alert("E-mail não cadastrado");
         return false;
@@ -135,12 +134,12 @@ function Usuario(nome, foto, nascimento, genero, idadeP, generoP, email, senha){
 //Funções Auxiliares
 //TODO concertar erro na função de busca
 function buscaUsuario(email){
-    var usuario;
     var busca = email.toString();
     var u = _BANCO.collection("usuarios").doc(busca);
+    var usuario;
     u.get().then(function(doc) {
         if (doc.exists) {
-            usuario = converteJsonToObjeto(user);
+            usuario = converteJsonToObjeto(doc);
         } else {
             usuario = null;
         }
