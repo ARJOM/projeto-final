@@ -8,7 +8,7 @@ function recebe(){
         var pergunta = "pergunta"+i;
         var radio = document.getElementsByName(pergunta);
         var valor = getChecked(radio);
-        console.log(valor)
+        console.log(valor);
         respostas.push(valor);
         console.log(respostas);
     }
@@ -50,11 +50,17 @@ function exibeMatch(){
     for (var i = 0; i<matchs.length; i++){
         var match = matchs[i];
         var user =  buscaUsuario(match.email);
-        var porcentagem = (match.coeficiente*100).toFixed(2)
-        resultado += "<tr><td>"+(i+1)+"</td><td>"+user.nome+"</td><td> "+porcentagem+"%</td></tr>"
+        var porcentagem = (match.coeficiente*100).toFixed(2);
+        resultado += "<tr><td>"+(i+1)+"</td><td>"+user.nome+"</td><td> "+porcentagem+"%</td></tr>";
     }
-    resultado += "</table>"
+    resultado += "</table>";
     paragrafo.innerHTML = resultado;
+    var mapOptions = {
+        center: new google.maps.LatLng(-34.397, 150.644),
+        zoom: 8,
+        mapTypeId: google.maps.MapTypeId.ROADMAP
+    };
+    var map = new google.maps.Map(document.getElementById("mapa"), mapOptions);
 }
 
 //Funções de calculo
