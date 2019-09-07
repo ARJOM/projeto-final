@@ -53,9 +53,9 @@ function render(lista){
     var resultado = "";
     for (var i=0; i<lista.length; i++){
         var questao = lista[i];
-        resultado += "<div>";
-        resultado += "<p>"+questao.pergunta+"</p>";
-        resultado += "<input type='radio' name='"+questao.pergunta+"' value='0'/><label for='zero'>Não sou capaz de opinar</label>";
+        resultado += "<div class='campus'>";
+        resultado += "<h4>"+questao.pergunta+"</h4>";
+        resultado += "<input type='radio' name='"+questao.pergunta+"' value='0'/><label>Não sou capaz de opinar</label>";
         resultado += "<input type='radio' name='"+questao.pergunta+"' value='1'/><label for='um'>Odeio</label>";
         resultado += "<input type='radio' name='"+questao.pergunta+"' value='2'/><label for='um'>Não gosto</label>";
         resultado += "<input type='radio' name='"+questao.pergunta+"' value='3'/><label for='um'>Indiferente</label>";
