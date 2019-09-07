@@ -54,6 +54,8 @@ function exibeMatch(){
         resultado += "<tr><td>"+(i+1)+"</td><td>"+user.nome+"</td><td> "+porcentagem+"%</td></tr>";
     }
     resultado += "</table>";
+    //TODO deixar funcionando
+    //https://www.devmedia.com.br/introducao-a-google-maps-api/26967
     paragrafo.innerHTML = resultado;
     var mapOptions = {
         center: new google.maps.LatLng(-34.397, 150.644),
