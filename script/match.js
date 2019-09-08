@@ -2,10 +2,11 @@
 
 function recebe(){
     var usuario = getObjectLocalStorage("logado");
+    var perguntas = getObjectLocalStorage("perguntas");
     console.log(usuario.nome);
     var respostas = [];
-    for (var i = 1; i<=perguntas.length; i++){
-        var pergunta = "pergunta"+i;
+    for (var i = 0; i<perguntas.length; i++){
+        var pergunta = perguntas[i].pergunta;
         var radio = document.getElementsByName(pergunta);
         var valor = getChecked(radio);
         console.log(valor);
@@ -24,15 +25,23 @@ function calculaMatch(){
     var usuario = getObjectLocalStorage("logado");
     var cadastrados = getObjectLocalStorage("cadastrados");
     var resultado = [];
+    var minimo = usuario.idadeP[0];
+    var maximo = usuario.idadeP[1];
+    var generop = usuario.generoP;
     for (var i=0; i<cadastrados.length; i++){
         var user = cadastrados[i];
-        if (usuario.email != user.email){
+        var idade = user.idade;
+        if (usuario.email != user.email && idade >= minimo && idade <= maximo){  
             var cosseno = calculaCosseno(user.lista, usuario.lista);
             var match = new Match(user.email, cosseno);
-            resultado.push(match);
+            if (generop == "a"){
+                resultado.push(match);
+            } else if (generop == user.genero){
+                resultado.push(match);
+            }
         }
     }
-    resultadof = insertion_Sort(resultado)
+    resultadof = insertion_Sort(resultado);
     usuario.match = resultadof;
     var indice = buscaIndice(usuario.email);
     cadastrados[indice] = usuario;
