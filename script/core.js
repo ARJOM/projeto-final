@@ -126,6 +126,28 @@ function remove(){
     }
 }
 
+function geoLocalizacao(){
+    if (navigator.geolocation) {
+      navigator.geolocation.getCurrentPosition(exibePosicao);
+    } else { 
+      alert("Erro ao obter geolocalização.");
+    }
+  }
+    
+  /**
+   * Exibe latitude e longitude
+   * @param {*} position 
+   */
+function exibePosicao(position) {
+    var localizacao = [position.coords.latitude, position.coords.longitude];
+    var usuario = getObjectLocalStorage("logado");
+    usuario.locaction = localizacao;
+    var indice = buscaIndice(usuario.email);
+    cadastrados[indice] = usuario;
+    setObjectLocalStorage("cadastrados", cadastrados);
+    setObjectLocalStorage("logado", usuario);
+}
+
 function valida(){
     if (getObjectLocalStorage("logado") == null){
         window.location.href = "login.html";
@@ -149,6 +171,8 @@ function Usuario(nome, foto, nascimento, genero, idadeP, generoP, email, senha){
 
     this.lista = [];
     this.match = [];
+
+    this.locaction = null;
 
     this.descricao = function(){
         return "O usuário é: "+this.nome+"!";
