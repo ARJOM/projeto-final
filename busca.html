@@ -1,0 +1,31 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+    <meta charset="UTF-8">
+    <title>O que busca?</title>
+</head>
+<body>
+    <div id="busca">
+        <div>
+            <!--TODO localização-->
+        </div>
+        <div>
+            <label for="genero">Gênero procurado:</label>
+            <input type="radio" name="genero" value="m"> Masculino
+            <input type="radio" name="genero" value="f"> Feminino
+            <input type="radio" name="genero" value="a" checked> Ambos
+        </div>
+        <div id="idade">
+            <label for="idade">Idade Mínima</label>
+            <input type="text" id="minimo">
+            <label for="idade">Idade Máxima</label>
+            <input type="text" id="maximo">
+        </div>
+    </div>
+    <div>
+        <button onclick="busca()">Submeter</button>
+    </div>
+    <!--Scripts-->
+        <script src="script/core.js"></script>
+</body>
+</html>

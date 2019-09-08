@@ -55,7 +55,8 @@ function cadastro() {
         setObjectLocalStorage("logado", usuario);
         window.alert("Bem vindo "+usuario.nome+"!");
         //window.location.href = "update.html";
-        window.location.href = "index.html";
+        //window.location.href = "index.html";
+        window.location.href = "busca.html";
     } else {
         window.alert("API Web Storage não encontrada");
     }
@@ -84,6 +85,27 @@ function update(){
 
 }
 
+function busca(){
+    valida();
+    var cadastrados = getObjectLocalStorage("cadastrados");
+    var usuario = getObjectLocalStorage("logado");
+    var radio = document.getElementsByName("genero");
+    var genero = getChecked(radio);
+    var minimo = document.getElementById("minimo").value;
+    minimo = parseInt(minimo);
+    var maximo = document.getElementById("maximo").value;
+    maximo = parseInt(maximo);
+    var idade = [minimo, maximo];
+    console.log(idade);
+    usuario.idadeP = idade;
+    usuario.generoP = genero;
+    var indice = buscaIndice(usuario.email);
+    cadastrados[indice] = usuario;
+    setObjectLocalStorage("cadastrados", cadastrados);
+    setObjectLocalStorage("logado", usuario);
+    window.location.href = "index.html";
+}
+
 function remove(){
     var cadastrados = getObjectLocalStorage("cadastrados");
     var usuario = getObjectLocalStorage("logado");
@@ -91,7 +113,7 @@ function remove(){
     if (sure){
         for (var i = 0; i < cadastrados.length; i++){
             var user = cadastrados[i];
-            if (isEquivalent(user, usuario)){
+            if (user.email == usuario.email){
                 cadastrados.splice(i, 1);
                 setObjectLocalStorage("cadastrados", cadastrados);
                 localStorage.removeItem("logado");
@@ -99,7 +121,7 @@ function remove(){
                 return true;
             }
         }
-        window.alert("Usuário logado não consta como cadastrado!!!")
+        window.alert("Usuário logado não consta como cadastrado!!!");
         return false;
     }
 }
@@ -130,7 +152,7 @@ function Usuario(nome, foto, nascimento, genero, idadeP, generoP, email, senha){
 
     this.descricao = function(){
         return "O usuário é: "+this.nome+"!";
-    }
+    };
 }
 
 //Funções Auxiliares
