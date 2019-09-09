@@ -66,15 +66,6 @@ function exibeMatch(){
     paragrafo.innerHTML = resultado;
 }
 
-function initMap() {
-    var user = getObjectLocalStorage("logado");
-    var local = user.locaction;
-    var map = new google.maps.Map(document.getElementById('mapa'), {
-    center: {lat: local[0], lng: local[1]},
-    zoom: 15
-    });
-}
-
 //Funções de calculo
 
 function calculaModulo(lista){
