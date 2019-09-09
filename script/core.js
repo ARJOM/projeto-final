@@ -72,17 +72,41 @@ function preenche(){
     document.getElementById("nome").value = usuario.nome;
     document.getElementById("email").value = usuario.email;
     document.getElementById("nascimento").value = usuario.nascimento;
+    document.getElementById("minimo").value = usuario.idadeP[0];
+    document.getElementById("maximo").value = usuario.idadeP[1];
+    var lista = document.getElementsByName("genero");
+    for (var i=0; i < lista.length; i++){
+        if (lista[i].value==usuario.generoP){
+            lista[i].checked = true;
+        }
+    }
+    
 }
 
 function update(){
     var cadastrados = getObjectLocalStorage("cadastrados");
     var usuario = getObjectLocalStorage("logado");
     var indice = buscaIndice(usuario.email);
-    var senha = document.getElementById("oldsenha").value; 
+    var nsenha = document.getElementById("newsenha").value
+    var senha = document.getElementById("oldsenha").value;
+    var nome = document.getElementById("nome").value;
+    var minimo = document.getElementById("minimo").value;
+    var maximo = document.getElementById("maximo").value;
+    var generoP = document.getElementsByName("genero");
     if (senha == usuario.senha){
-        usuario.senha = document.getElementById("newsenha").value;
+        if (nsenha.length>0){
+            usuario.senha = nsenha;
+        }
+        usuario.nome = nome;
+        usuario.idadeP = [minimo, maximo];
+        usuario.generoP = getChecked(generoP);
+        cadastrados[indice] = usuario;
+        setObjectLocalStorage("cadastrados", cadastrados);
+        setObjectLocalStorage("logado", usuario);
+        window.location.href = "index.html";
+    }else{
+        window.alert("Senha incorreta");
     }
-
 }
 
 function busca(){
