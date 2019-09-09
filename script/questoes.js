@@ -39,7 +39,6 @@ function preenche(){
     var generos = buscaCategorias("filmes");
     resultado += "<h2>Filmes:</h2>"+render(generos);
 
-    resultado += "<input type='submit' onclick='recebe()' value='Enviar'>"
     meuParagrafo.innerHTML = resultado;
     check();
 }
