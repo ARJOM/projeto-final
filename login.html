@@ -3,28 +3,29 @@
 <head>
     <meta charset="UTF-8">
     <title>Login</title>
+    <link rel='stylesheet' type='text/css' media='screen' href='css/main.css'>
+    <link href="https://fonts.googleapis.com/css?family=Muli&display=swap" rel="stylesheet">
+    <script src="https://kit.fontawesome.com/2d7d674aab.js"></script>
 </head>
 <body>
-    <div id="login">
-        <p>Faça Login</p>
-        <div>
-            <label for="email">Email:</label>
-            <input type="text" id="email">
-        </div>
-        <div>
-            <label for="senha">Senha:</label>
-            <input type="password" id="senha">
-        </div>
-        <div>
-            <button onclick="login()">Logar</button>
-        </div>
+    <div class="main-login">
+        <div id="login" class="login">
+            <h2>Faça Login</h2>
+            <div class="campos-login">
+                <label for="email">Email:</label> 
+                <input type="text" id="email">
+                <label for="senha">Senha:</label>
+                <input type="password" id="senha">
+                <button onclick="login()">
+                    <h3>Login</h3>
+                </button>
+                <h5>
+                    Cadastre-se
+                    <a onclick="window.location.href = 'cadastro.html'" href="cadastro.html">aqui</a>
+                </h5>
+            </div>
     </div>
-    <div>
-        <p>Ou Cadastre-se</p>
-        <button onclick="window.location.href = 'cadastro.html'">Cadastre</button>
-    </div>
-
-    <!-- Scripts -->
+       <!-- Scripts -->
         <script src="script/core.js"></script>
 </body>
 </html>
