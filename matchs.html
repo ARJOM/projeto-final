@@ -3,7 +3,17 @@
 <head>
     <meta charset="UTF-8">
     <title>Matchs</title>
-    <script type="text/javascript" src="https://www.googleapis.com/geolocation/v1/geolocate?key=AIzaSyDnse8a5fQdFms85wZbii7PUZIvw2P9Wsk" ></script>
+    <style>
+    #mapa {
+        height: 50%;
+        width: 50%;
+    }
+    html, body {
+        height: 100%;
+        margin: 0;
+        padding: 0;
+    }
+    </style>
 </head>
 <body onload="exibeMatch()">
     <div>
@@ -18,5 +28,18 @@
         <script src="script/match.js"></script>
         <script src="script/core.js"></script>
         <script src="script/questoes.js"></script>
+        <script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyDnse8a5fQdFms85wZbii7PUZIvw2P9Wsk&callback=initMap" async defer></script>
+        <script>
+            var user = getObjectLocalStorage("logado");
+            var local = user.locaction;
+            var map;
+            function initMap() {
+              map = new google.maps.Map(document.getElementById('mapa'), {
+                center: {lat: local[0], lng: local[1]},
+                zoom: 15
+              });
+            }
+        </script>
+
 </body>
 </html>
