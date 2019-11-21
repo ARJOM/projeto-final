@@ -1,9 +1,11 @@
 <!DOCTYPE html>
 <html lang="pt-br">
+
 <head>
     <meta charset="UTF-8">
     <title>Atualização</title>
 </head>
+
 <body onload="preenche()">
     <div id="dados">
         <div>
@@ -12,7 +14,7 @@
         </div>
         <div>
             <label for="nome">Nome:</label>
-            <input type="text" id="nome"/>
+            <input type="text" id="nome" />
         </div>
         <div>
             <label for="email">Email:</label>
@@ -49,8 +51,17 @@
         <button onclick="update()">Submeter</button>
         <button onclick="remove()">Excluir conta</button>
     </div>
-    
+
     <!--Scripts-->
-        <script src="script/core.js">preenche()</script>
+    <!-- The core Firebase JS SDK is always required and must be listed first -->
+    <script src="https://www.gstatic.com/firebasejs/7.4.0/firebase-app.js"></script>
+
+    <!-- TODO: Add SDKs for Firebase products that you want to use
+     https://firebase.google.com/docs/web/setup#available-libraries -->
+    <script src="https://www.gstatic.com/firebasejs/6.4.0/firebase-firestore.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/7.2.3/firebase-auth.js"></script>
+    <script src="script/firebase.js"></script>
+    <script src="script/core.js">preenche()</script>
 </body>
+
 </html>

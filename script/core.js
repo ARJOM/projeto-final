@@ -1,10 +1,11 @@
 //Globais
+var db = firebase.firestore();
 
 cadastrados = getObjectLocalStorage("cadastrados");
 if (cadastrados == null) {
     cadastrados = [];
     setObjectLocalStorage("cadastrados", cadastrados);
-} 
+}
 
 //Usuário
 
@@ -14,21 +15,19 @@ function login() {
 
     var cadastrados = getObjectLocalStorage("cadastrados");
 
-    for (var i = 0; i < cadastrados.length; i++){
+    for (var i = 0; i < cadastrados.length; i++) {
         usuario = cadastrados[i];
-        if (usuario.email == email){
-            if (usuario.senha == senha){
+        if (usuario.email == email) {
+            if (usuario.senha == senha) {
                 setObjectLocalStorage("logado", usuario);
-                if (usuario.genero == "f"){
-                    window.alert("Bem vinda "+usuario.nome+"!");
-                }
-                else {
-                    window.alert("Bem vindo "+usuario.nome+"!");
+                if (usuario.genero == "f") {
+                    window.alert("Bem vinda " + usuario.nome + "!");
+                } else {
+                    window.alert("Bem vindo " + usuario.nome + "!");
                 }
                 window.location.href = "index.html";
                 return true;
-            }
-            else {
+            } else {
                 window.alert("Senha incorreta");
                 return false;
             }
@@ -39,35 +38,58 @@ function login() {
 }
 
 function cadastro() {
-    if (typeof (Storage) !== "undefined") {
-        var nome = document.getElementById("nome").value;
-        var email = document.getElementById("email").value;
-        var senha = document.getElementById("senha").value;
-        var nascimento = document.getElementById("nascimento").value;
-        console.log(nascimento);
-        var radio = document.getElementsByName("genero");
-        var genero = getChecked(radio);
 
-        var usuario = new Usuario(nome, null, nascimento, genero, null, null, email, senha);
-        cadastrados = getObjectLocalStorage("cadastrados");
-        cadastrados.push(usuario);
-        setObjectLocalStorage("cadastrados", cadastrados);
-        setObjectLocalStorage("logado", usuario);
-        window.alert("Bem vindo "+usuario.nome+"!");
-        //window.location.href = "update.html";
-        //window.location.href = "index.html";
-        window.location.href = "busca.html";
-    } else {
-        window.alert("API Web Storage não encontrada");
-    }
+    var usuarios = db.collection("users");
+
+    var nome = document.getElementById("nome").value;
+    var email = document.getElementById("email").value;
+    var senha = document.getElementById("senha").value;
+    var nascimento = document.getElementById("nascimento").value;
+    console.log(nascimento);
+    var radio = document.getElementsByName("genero");
+    var genero = getChecked(radio);
+
+    // var usuario = new Usuario(nome, null, nascimento, genero, null, null, email, senha);
+    // cadastrados = getObjectLocalStorage("cadastrados");
+    // cadastrados.push(usuario);
+    // setObjectLocalStorage("cadastrados", cadastrados);
+    // setObjectLocalStorage("logado", usuario);
+    // window.alert("Bem vindo " + usuario.nome + "!");
+    // //window.location.href = "update.html";
+    // //window.location.href = "index.html";
+    // window.location.href = "busca.html";
+
+    firebase.auth().createUserWithEmailAndPassword(email, senha)
+        .then(function () {
+            usuarios.doc(email).set({
+                name: nome,
+                email: email,
+                birthday: nascimento,
+                gender: genero,
+            });
+        })
+        .catch(function (error) {
+            usuarios.doc(email).get().then(function (doc) {
+                if (doc.exists) {
+                    console.log("Document data:", doc.data());
+                } else {
+                    console.log("No such document!", doc.data());
+                }
+            }).catch(function(error) {
+                console.log("Erro ao pegar o documento: ", error);
+            });
+        });
+
 }
 
-function logout(){
+
+
+function logout() {
     localStorage.removeItem("logado");
     window.location.href = "login.html";
 }
 
-function preenche(){
+function preenche() {
     var usuario = getObjectLocalStorage("logado");
     document.getElementById("nome").value = usuario.nome;
     document.getElementById("email").value = usuario.email;
@@ -75,15 +97,15 @@ function preenche(){
     document.getElementById("minimo").value = usuario.idadeP[0];
     document.getElementById("maximo").value = usuario.idadeP[1];
     var lista = document.getElementsByName("genero");
-    for (var i=0; i < lista.length; i++){
-        if (lista[i].value==usuario.generoP){
+    for (var i = 0; i < lista.length; i++) {
+        if (lista[i].value == usuario.generoP) {
             lista[i].checked = true;
         }
     }
-    
+
 }
 
-function update(){
+function update() {
     var cadastrados = getObjectLocalStorage("cadastrados");
     var usuario = getObjectLocalStorage("logado");
     var indice = buscaIndice(usuario.email);
@@ -93,8 +115,8 @@ function update(){
     var minimo = document.getElementById("minimo").value;
     var maximo = document.getElementById("maximo").value;
     var generoP = document.getElementsByName("genero");
-    if (senha == usuario.senha){
-        if (nsenha.length>0){
+    if (senha == usuario.senha) {
+        if (nsenha.length > 0) {
             usuario.senha = nsenha;
         }
         usuario.nome = nome;
@@ -104,12 +126,12 @@ function update(){
         setObjectLocalStorage("cadastrados", cadastrados);
         setObjectLocalStorage("logado", usuario);
         window.location.href = "index.html";
-    }else{
+    } else {
         window.alert("Senha incorreta");
     }
 }
 
-function busca(){
+function busca() {
     valida();
     var cadastrados = getObjectLocalStorage("cadastrados");
     var usuario = getObjectLocalStorage("logado");
@@ -130,14 +152,14 @@ function busca(){
     window.location.href = "index.html";
 }
 
-function remove(){
+function remove() {
     var cadastrados = getObjectLocalStorage("cadastrados");
     var usuario = getObjectLocalStorage("logado");
     var sure = confirm("Você está prestes a excluir essa conta.\nDeseja continuar?");
-    if (sure){
-        for (var i = 0; i < cadastrados.length; i++){
+    if (sure) {
+        for (var i = 0; i < cadastrados.length; i++) {
             var user = cadastrados[i];
-            if (user.email == usuario.email){
+            if (user.email == usuario.email) {
                 cadastrados.splice(i, 1);
                 setObjectLocalStorage("cadastrados", cadastrados);
                 localStorage.removeItem("logado");
@@ -150,18 +172,18 @@ function remove(){
     }
 }
 
-function geoLocalizacao(){
+function geoLocalizacao() {
     if (navigator.geolocation) {
-      navigator.geolocation.getCurrentPosition(exibePosicao);
-    } else { 
-      alert("Erro ao obter geolocalização.");
+        navigator.geolocation.getCurrentPosition(exibePosicao);
+    } else {
+        alert("Erro ao obter geolocalização.");
     }
-  }
-    
-  /**
-   * Exibe latitude e longitude
-   * @param {*} position 
-   */
+}
+
+/**
+ * Exibe latitude e longitude
+ * @param {*} position 
+ */
 function exibePosicao(position) {
     var localizacao = [position.coords.latitude, position.coords.longitude];
     var usuario = getObjectLocalStorage("logado");
@@ -172,15 +194,15 @@ function exibePosicao(position) {
     setObjectLocalStorage("logado", usuario);
 }
 
-function valida(){
-    if (getObjectLocalStorage("logado") == null){
+function valida() {
+    if (getObjectLocalStorage("logado") == null) {
         window.location.href = "login.html";
     }
 }
 
 //Classes
 
-function Usuario(nome, foto, nascimento, genero, idadeP, generoP, email, senha){
+function Usuario(nome, foto, nascimento, genero, idadeP, generoP, email, senha) {
     this.foto = foto;
     this.nome = nome;
     this.nascimento = nascimento;
@@ -198,36 +220,36 @@ function Usuario(nome, foto, nascimento, genero, idadeP, generoP, email, senha){
 
     this.locaction = null;
 
-    this.descricao = function(){
-        return "O usuário é: "+this.nome+"!";
+    this.descricao = function () {
+        return "O usuário é: " + this.nome + "!";
     };
 }
 
 //Funções Auxiliares
 
-function buscaUsuario(email){
+function buscaUsuario(email) {
     var cadastrados = getObjectLocalStorage("cadastrados");
-    for (var i=0; i<cadastrados.length; i++){
+    for (var i = 0; i < cadastrados.length; i++) {
         var usuario = cadastrados[i];
-        if (usuario.email == email){
+        if (usuario.email == email) {
             return usuario;
         }
     }
-    return null;  
+    return null;
 }
 
-function buscaIndice(email){
+function buscaIndice(email) {
     var cadastrados = getObjectLocalStorage("cadastrados");
-    for (var i=0; i<cadastrados.length; i++){
+    for (var i = 0; i < cadastrados.length; i++) {
         var usuario = cadastrados[i];
-        if (usuario.email == email){
+        if (usuario.email == email) {
             return i;
         }
     }
-    return null;  
+    return null;
 }
 
-function calculaIdade(nascimento){
+function calculaIdade(nascimento) {
     var data = new Date();
     var nasc = new Date(nascimento);
     var dia = data.getDate();
@@ -236,23 +258,19 @@ function calculaIdade(nascimento){
     var mesN = nasc.getMonth();
     var ano = data.getFullYear();
     var anoN = nasc.getFullYear();
-    if (ano >= anoN){
-        if (mes > mesN){
-            return ano-anoN;
-        }
-        else if (mes < mesN){
-            return ano-anoN-1;
-        }
-        else{
-            if (dia >= diaN){
-                return ano-anoN;
-            }
-            else {
-                return ano-anoN-1;
+    if (ano >= anoN) {
+        if (mes > mesN) {
+            return ano - anoN;
+        } else if (mes < mesN) {
+            return ano - anoN - 1;
+        } else {
+            if (dia >= diaN) {
+                return ano - anoN;
+            } else {
+                return ano - anoN - 1;
             }
         }
-    }
-    else {
+    } else {
         return null;
     }
 }
@@ -284,46 +302,41 @@ function isEquivalent(a, b) {
     return true;
 }
 
-function getChecked(lista){
-    for (var i=0; i < lista.length; i++){
-        if (lista[i].checked){
+function getChecked(lista) {
+    for (var i = 0; i < lista.length; i++) {
+        if (lista[i].checked) {
             return lista[i].value;
         }
     }
     return null;
 }
 
-function setObjectLocalStorage(key,value){
-	localStorage.setItem(key, JSON.stringify(value));
+function setObjectLocalStorage(key, value) {
+    localStorage.setItem(key, JSON.stringify(value));
 }
 
-function getObjectLocalStorage(key){
-	var value = localStorage.getItem(key);
+function getObjectLocalStorage(key) {
+    var value = localStorage.getItem(key);
     return value && JSON.parse(value);
 }
 
-function insertion_Sort(arr){
-  for (var i = 1; i < arr.length; i++) 
-  {
-    if (arr[i].coeficiente > arr[0].coeficiente) 
-    {
-      //move current element to the first position
-      arr.unshift(arr.splice(i,1)[0]);
-    } 
-    else if (arr[i].coeficiente < arr[i-1].coeficiente) 
-    {
-      //leave current element where it is
-      continue;
-    } 
-    else {
-      //find where element should go
-      for (var j = 1; j < i; j++) {
-        if (arr[i].coeficiente < arr[j-1].coeficiente && arr[i].coeficiente > arr[j].coeficiente){
-          //move element
-          arr.splice(j,0,arr.splice(i,1)[0]);
+function insertion_Sort(arr) {
+    for (var i = 1; i < arr.length; i++) {
+        if (arr[i].coeficiente > arr[0].coeficiente) {
+            //move current element to the first position
+            arr.unshift(arr.splice(i, 1)[0]);
+        } else if (arr[i].coeficiente < arr[i - 1].coeficiente) {
+            //leave current element where it is
+            continue;
+        } else {
+            //find where element should go
+            for (var j = 1; j < i; j++) {
+                if (arr[i].coeficiente < arr[j - 1].coeficiente && arr[i].coeficiente > arr[j].coeficiente) {
+                    //move element
+                    arr.splice(j, 0, arr.splice(i, 1)[0]);
+                }
+            }
         }
-      }
     }
-  }
-  return arr;
+    return arr;
 }

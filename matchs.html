@@ -1,20 +1,24 @@
 <!DOCTYPE html>
 <html lang="pt-br">
+
 <head>
     <meta charset="UTF-8">
     <title>Matchs</title>
     <style>
-    #mapa {
-        height: 50%;
-        width: 50%;
-    }
-    html, body {
-        height: 100%;
-        margin: 0;
-        padding: 0;
-    }
+        #mapa {
+            height: 50%;
+            width: 50%;
+        }
+
+        html,
+        body {
+            height: 100%;
+            margin: 0;
+            padding: 0;
+        }
     </style>
 </head>
+
 <body onload="exibeMatch()">
     <div>
         <button onclick="logout()">Sair</button>
@@ -25,10 +29,18 @@
     <div id="mapa"></div>
 
     <!-- Scripts -->
-        <script src="script/match.js"></script>
-        <script src="script/core.js"></script>
-        <script src="script/questoes.js"></script>
-        <!--
+    <!-- The core Firebase JS SDK is always required and must be listed first -->
+    <script src="https://www.gstatic.com/firebasejs/7.4.0/firebase-app.js"></script>
+
+    <!-- TODO: Add SDKs for Firebase products that you want to use
+     https://firebase.google.com/docs/web/setup#available-libraries -->
+    <script src="https://www.gstatic.com/firebasejs/6.4.0/firebase-firestore.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/7.2.3/firebase-auth.js"></script>
+    <script src="script/firebase.js"></script>
+    <script src="script/match.js"></script>
+    <script src="script/core.js"></script>
+    <script src="script/questoes.js"></script>
+    <!--
         <script>
             var user = getObjectLocalStorage("logado");
             var local = user.locaction;
@@ -41,49 +53,52 @@
             }
         </script>
     -->
-        <script>
-            var usuario = getObjectLocalStorage("logado");
-            var pos = usuario.locaction;
-            function initMap() {
-                
-                var map = new google.maps.Map(document.getElementById('mapa'), {
+    <script>
+        var usuario = getObjectLocalStorage("logado");
+        var pos = usuario.locaction;
+        function initMap() {
+
+            var map = new google.maps.Map(document.getElementById('mapa'), {
                 zoom: 15,
-                center: {lat: pos[0], lng: pos[1]}
-                });
-        
-                // Criando uma lista de numeros da ordem de matchs
-                var labels = [];
-                for (var i=1; i<=usuario.match.length; i++){
-                    var s = i.toString();
-                    labels.push(s);
-                }
-                console.log(labels);
-        
-                // Add some markers to the map.
-                // Note: The code uses the JavaScript Array.prototype.map() method to
-                // create an array of markers based on a given "locations" array.
-                // The map() method here has nothing to do with the Google Maps API.
-                var markers = locations.map(function(location, i) {
+                center: { lat: pos[0], lng: pos[1] }
+            });
+
+            // Criando uma lista de numeros da ordem de matchs
+            var labels = [];
+            for (var i = 1; i <= usuario.match.length; i++) {
+                var s = i.toString();
+                labels.push(s);
+            }
+            console.log(labels);
+
+            // Add some markers to the map.
+            // Note: The code uses the JavaScript Array.prototype.map() method to
+            // create an array of markers based on a given "locations" array.
+            // The map() method here has nothing to do with the Google Maps API.
+            var markers = locations.map(function (location, i) {
                 return new google.maps.Marker({
                     position: location,
                     label: labels[i % labels.length]
                 });
-                });
-        
-                // Add a marker clusterer to manage the markers.
-                var markerCluster = new MarkerClusterer(map, markers,
-                    {imagePath: 'https://developers.google.com/maps/documentation/javascript/examples/markerclusterer/m'});
-            }
-            
-            var locations = [];
-            for (var i = 0; i<usuario.match.length; i++){
-                var email = usuario.match[i].email;
-                var user = buscaUsuario(email);
-                var pos = user.locaction;
-                locations.push({lat: pos[0], lng: pos[1]});
-            }
-        </script>
-        <script src="https://developers.google.com/maps/documentation/javascript/examples/markerclusterer/markerclusterer.js"></script>
-        <script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyDnse8a5fQdFms85wZbii7PUZIvw2P9Wsk&callback=initMap" async defer></script>
+            });
+
+            // Add a marker clusterer to manage the markers.
+            var markerCluster = new MarkerClusterer(map, markers,
+                { imagePath: 'https://developers.google.com/maps/documentation/javascript/examples/markerclusterer/m' });
+        }
+
+        var locations = [];
+        for (var i = 0; i < usuario.match.length; i++) {
+            var email = usuario.match[i].email;
+            var user = buscaUsuario(email);
+            var pos = user.locaction;
+            locations.push({ lat: pos[0], lng: pos[1] });
+        }
+    </script>
+    <script
+        src="https://developers.google.com/maps/documentation/javascript/examples/markerclusterer/markerclusterer.js"></script>
+    <script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyDnse8a5fQdFms85wZbii7PUZIvw2P9Wsk&callback=initMap"
+        async defer></script>
 </body>
+
 </html>

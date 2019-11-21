@@ -1,5 +1,6 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
     <meta charset="UTF-8">
     <title>Login</title>
@@ -7,12 +8,13 @@
     <link href="https://fonts.googleapis.com/css?family=Muli&display=swap" rel="stylesheet">
     <script src="https://kit.fontawesome.com/2d7d674aab.js"></script>
 </head>
+
 <body>
     <div class="main-login">
         <div id="login" class="login">
             <h2>Faça Login</h2>
             <div class="campos-login">
-                <label for="email">Email:</label> 
+                <label for="email">Email:</label>
                 <input type="text" id="email">
                 <label for="senha">Senha:</label>
                 <input type="password" id="senha">
@@ -24,8 +26,18 @@
                     <a onclick="window.location.href = 'cadastro.html'" href="cadastro.html">aqui</a>
                 </h5>
             </div>
+        </div>
     </div>
-       <!-- Scripts -->
-        <script src="script/core.js"></script>
+    <!-- Scripts -->
+    <!-- The core Firebase JS SDK is always required and must be listed first -->
+    <script src="https://www.gstatic.com/firebasejs/7.4.0/firebase-app.js"></script>
+
+    <!-- TODO: Add SDKs for Firebase products that you want to use 
+    https://firebase.google.com/docs/web/setup#available-libraries -->
+    <script src="https://www.gstatic.com/firebasejs/6.4.0/firebase-firestore.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/7.2.3/firebase-auth.js"></script>
+    <script src="script/firebase.js"></script>
+    <script src="script/core.js"></script>
 </body>
+
 </html>
