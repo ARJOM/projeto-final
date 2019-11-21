@@ -12,29 +12,18 @@ if (cadastrados == null) {
 function login() {
     var email = document.getElementById("email").value;
     var senha = document.getElementById("senha").value;
+    firebase.auth().signInWithEmailAndPassword(email, senha)
+        .then(function (result) {
+            console.log(result);
+            window.alert("Logado na conta " + email);
+            window.location.href = "index.html";
+        })
+        .catch(function (error) {
+            console.error(error.code);
+            console.error(error.message);
+            alert("Falha ao logar. O email não existe ou a senha foi digitada errada!");
+        });
 
-    var cadastrados = getObjectLocalStorage("cadastrados");
-
-    for (var i = 0; i < cadastrados.length; i++) {
-        usuario = cadastrados[i];
-        if (usuario.email == email) {
-            if (usuario.senha == senha) {
-                setObjectLocalStorage("logado", usuario);
-                if (usuario.genero == "f") {
-                    window.alert("Bem vinda " + usuario.nome + "!");
-                } else {
-                    window.alert("Bem vindo " + usuario.nome + "!");
-                }
-                window.location.href = "index.html";
-                return true;
-            } else {
-                window.alert("Senha incorreta");
-                return false;
-            }
-        }
-    }
-    window.alert("E-mail não cadastrado");
-    return false;
 }
 
 function cadastro() {
@@ -45,19 +34,8 @@ function cadastro() {
     var email = document.getElementById("email").value;
     var senha = document.getElementById("senha").value;
     var nascimento = document.getElementById("nascimento").value;
-    console.log(nascimento);
     var radio = document.getElementsByName("genero");
     var genero = getChecked(radio);
-
-    // var usuario = new Usuario(nome, null, nascimento, genero, null, null, email, senha);
-    // cadastrados = getObjectLocalStorage("cadastrados");
-    // cadastrados.push(usuario);
-    // setObjectLocalStorage("cadastrados", cadastrados);
-    // setObjectLocalStorage("logado", usuario);
-    // window.alert("Bem vindo " + usuario.nome + "!");
-    // //window.location.href = "update.html";
-    // //window.location.href = "index.html";
-    // window.location.href = "busca.html";
 
     firebase.auth().createUserWithEmailAndPassword(email, senha)
         .then(function () {
@@ -75,7 +53,7 @@ function cadastro() {
                 } else {
                     console.log("No such document!", doc.data());
                 }
-            }).catch(function(error) {
+            }).catch(function (error) {
                 console.log("Erro ao pegar o documento: ", error);
             });
         });
@@ -85,8 +63,14 @@ function cadastro() {
 
 
 function logout() {
-    localStorage.removeItem("logado");
-    window.location.href = "login.html";
+    var sure = window.confirm("Você está saindo da sua conta!\nTem certeza que deseja continuar?");
+    if (sure) {
+        firebase.auth().signOut().then(function () {
+                window.location.href = "login.html";
+        }, function (error) {
+            console.error(error);
+        });
+    }
 }
 
 function preenche() {
@@ -109,7 +93,7 @@ function update() {
     var cadastrados = getObjectLocalStorage("cadastrados");
     var usuario = getObjectLocalStorage("logado");
     var indice = buscaIndice(usuario.email);
-    var nsenha = document.getElementById("newsenha").value
+    var nsenha = document.getElementById("newsenha").value;
     var senha = document.getElementById("oldsenha").value;
     var nome = document.getElementById("nome").value;
     var minimo = document.getElementById("minimo").value;
